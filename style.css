@@ -1,0 +1,277 @@
+:root {
+  --bg-gradient: linear-gradient(135deg, #2b1055 0%, #752092 40%, #ff5e62 85%, #ff9966 100%);
+  --card-bg: rgba(34, 14, 58, 0.78);
+  --cell-bg: rgba(255, 255, 255, 0.08);
+  --cell-hover: rgba(255, 255, 255, 0.18);
+  --color-x: #ffbe0b; /* Warm Golden Sun */
+  --color-o: #ff4d8d; /* Vibrant Sunset Rose */
+  --color-draw: #ffa69e;
+  --text-light: #fff8f0;
+  --text-muted: #f3d5c0;
+  --border-glow: rgba(255, 190, 11, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg-gradient);
+  color: var(--text-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.game-container {
+  background: var(--card-bg);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 24px;
+  padding: 28px 24px;
+  width: 100%;
+  max-width: 430px;
+  box-shadow: 0 20px 50px rgba(24, 6, 44, 0.55);
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.game-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #ffbe0b, #ff6b6b, #ff4d8d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.5px;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+
+/* Mode Toggle & Sound */
+.controls-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.mode-toggle {
+  display: flex;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 4px;
+  border-radius: 12px;
+  flex: 1;
+}
+
+.mode-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 8px 10px;
+  border-radius: 9px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.mode-btn.active {
+  background: linear-gradient(135deg, #ff7b54, #ff4d8d);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 77, 141, 0.4);
+}
+
+.icon-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.icon-btn:hover {
+  transform: scale(1.06);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Scoreboard */
+.scoreboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.score-card {
+  background: rgba(255, 255, 255, 0.07);
+  border: 2px solid transparent;
+  border-radius: 14px;
+  padding: 10px 6px;
+  transition: all 0.3s ease;
+}
+
+.score-card.active-turn.player-x {
+  border-color: var(--color-x);
+  box-shadow: 0 0 15px rgba(255, 190, 11, 0.35);
+  transform: translateY(-2px);
+}
+
+.score-card.active-turn.player-o {
+  border-color: var(--color-o);
+  box-shadow: 0 0 15px rgba(255, 77, 141, 0.35);
+  transform: translateY(-2px);
+}
+
+.player-badge {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+}
+
+.score-value {
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+.player-x .score-value { color: var(--color-x); }
+.draws .score-value { color: var(--color-draw); }
+.player-o .score-value { color: var(--color-o); }
+
+/* Status Banner */
+.status-banner {
+  background: rgba(255, 255, 255, 0.09);
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+  transition: all 0.3s ease;
+}
+
+.highlight-x { color: var(--color-x); font-weight: 800; }
+.highlight-o { color: var(--color-o); font-weight: 800; }
+
+/* 3x3 Board */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.cell {
+  aspect-ratio: 1 / 1;
+  background: var(--cell-bg);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  font-size: 2.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.18s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.cell:hover:not(.taken) {
+  background: var(--cell-hover);
+  border-color: rgba(255, 190, 11, 0.5);
+  transform: scale(1.04);
+}
+
+.cell.x {
+  color: var(--color-x);
+  text-shadow: 0 0 18px rgba(255, 190, 11, 0.65);
+  animation: popIn 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cell.o {
+  color: var(--color-o);
+  text-shadow: 0 0 18px rgba(255, 77, 141, 0.65);
+  animation: popIn 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cell.win {
+  background: linear-gradient(135deg, rgba(255, 190, 11, 0.32), rgba(255, 77, 141, 0.32));
+  border-color: #ffbe0b;
+  animation: pulseWin 0.8s infinite alternate;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.4); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulseWin {
+  from { transform: scale(1); box-shadow: 0 0 12px rgba(255, 190, 11, 0.4); }
+  to { transform: scale(1.05); box-shadow: 0 0 24px rgba(255, 77, 141, 0.75); }
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #ff9966, #ff5e62);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(255, 94, 98, 0.4);
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(255, 94, 98, 0.6);
+}
+
+.secondary-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-light);
+}
+
+.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
