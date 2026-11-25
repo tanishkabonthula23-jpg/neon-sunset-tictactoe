@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sunset Clash | Interactive Tic-Tac-Toe</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+
+  <main class="game-container">
+    <header class="game-header">
+      <h1>Sunset Clash</h1>
+      <p class="subtitle">Interactive Tic-Tac-Toe Arena</p>
+    </header>
+
+    <!-- Game Mode & Sound Controls -->
+    <div class="controls-bar">
+      <div class="mode-toggle">
+        <button id="pvp-btn" class="mode-btn active">2 Players</button>
+        <button id="ai-btn" class="mode-btn">vs Computer</button>
+      </div>
+      <button id="sound-btn" class="icon-btn" title="Toggle Sound">🔊</button>
+    </div>
+
+    <!-- Live Scoreboard -->
+    <section class="scoreboard">
+      <div class="score-card player-x active-turn" id="card-x">
+        <span class="player-badge">PLAYER X</span>
+        <span class="score-value" id="score-x">0</span>
+      </div>
+      <div class="score-card draws">
+        <span class="player-badge">DRAWS</span>
+        <span class="score-value" id="score-draw">0</span>
+      </div>
+      <div class="score-card player-o" id="card-o">
+        <span class="player-badge" id="label-o">PLAYER O</span>
+        <span class="score-value" id="score-o">0</span>
+      </div>
+    </section>
+
+    <!-- Dynamic Status Banner -->
+    <div class="status-banner" id="status-text">
+      Player <span class="highlight-x">X</span>'s Turn
+    </div>
+
+    <!-- 3x3 Interactive Game Board -->
+    <section class="board" id="board" aria-label="Tic Tac Toe Board">
+      <button class="cell" data-index="0" aria-label="Cell 1"></button>
+      <button class="cell" data-index="1" aria-label="Cell 2"></button>
+      <button class="cell" data-index="2" aria-label="Cell 3"></button>
+      <button class="cell" data-index="3" aria-label="Cell 4"></button>
+      <button class="cell" data-index="4" aria-label="Cell 5"></button>
+      <button class="cell" data-index="5" aria-label="Cell 6"></button>
+      <button class="cell" data-index="6" aria-label="Cell 7"></button>
+      <button class="cell" data-index="7" aria-label="Cell 8"></button>
+      <button class="cell" data-index="8" aria-label="Cell 9"></button>
+    </section>
+
+    <!-- Action Buttons -->
+    <footer class="action-buttons">
+      <button id="next-round-btn" class="btn primary-btn">Next Round</button>
+      <button id="reset-all-btn" class="btn secondary-btn">Reset Scores</button>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
